@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  CsvTransformTool
+
+  Sample Boomi AI Agent Tool for CSV Transformations
+  
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  CsvTransformToolFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: csv_transform_tool/
+      Handler: app.lambda_handler
+      Runtime: python3.10
+      Architectures:
+        - x86_64
+      FunctionUrlConfig:
+        AuthType: NONE
+
+Outputs:
+  CsvTransformToolFunctionUrl:
+    Description: "URL for CsvTransformToolFunction function"
+    Value: !GetAtt CsvTransformToolFunction.FunctionUrl
+  CsvTransformToolFunction:
+    Description: "CsvTransformToolFunction Lambda Function ARN"
+    Value: !GetAtt CsvTransformToolFunction.Arn
+  CsvTransformToolFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt CsvTransformToolFunctionRole.Arn

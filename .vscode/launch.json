@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "name": "Run Local",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/local_run.py",
+      "args": [
+        "--event-file",
+        "${input:eventFile}"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+    },
+  ],
+  "inputs": [
+    {
+      "id": "eventFile",
+      "type": "pickString",
+      "description": "Event file",
+      "options": ["new.json", "sample.json"],
+      "default": "sample.json"
+    }
+  ]
+}
