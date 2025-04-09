@@ -1,25 +1,34 @@
 {
   "configurations": [
     {
-      "name": "Run Local",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/local_run.py",
-      "args": [
-        "--event-file",
-        "${input:eventFile}"
-      ],
-      "console": "integratedTerminal",
-      "justMyCode": true,
-    },
+      "type": "aws-sam",
+      "request": "direct-invoke",
+      "invokeTarget": {
+        "target": "template",
+        "logicalId": "CsvTransformToolFunction",
+        "templatePath": "${workspaceFolder}/template.yaml"
+      },
+      "lambda": {
+        "runtime": "python3.10"
+      },
+      "sam": {
+        "containerBuild": false,
+        "localArguments": [
+          "-e",
+          "${workspaceFolder}/events/example.json"
+        ],
+        "skipNewImageCheck": false
+      },
+      "name": "Invoke CsvTransformToolFunction"
+    }
   ],
   "inputs": [
     {
       "id": "eventFile",
       "type": "pickString",
       "description": "Event file",
-      "options": ["new.json", "sample.json"],
-      "default": "sample.json"
+      "options": ["example.json"],
+      "default": "example.json"
     }
-  ]
+  ],
 }
