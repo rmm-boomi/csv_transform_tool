@@ -10,9 +10,29 @@ Globals:
     Timeout: 3
 
 Resources:
+  CsvTransformFilesS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "csv-tools-files"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        IgnorePublicAcls: True
+        BlockPublicPolicy: True
+        RestrictPublicBuckets: True
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      LifecycleConfiguration:
+        Rules:
+          - Id: "ExpireOldFiles"
+            Status: Enabled
+            Prefix: "output/"
+            ExpirationInDays: 30
+
   CsvTransformToolFunction:
     Type: AWS::Serverless::Function 
     Properties:
+      FunctionName: "CsvTransformToolFunction"
       CodeUri: csv_transform_tool/
       Handler: app.lambda_handler
       Runtime: python3.10
@@ -22,6 +42,11 @@ Resources:
         AuthType: NONE
       Layers:
         - arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python310:23
+      Policies:
+        - S3ReadPolicy:
+            BucketName: "csv-tools-files"
+        - S3WritePolicy:
+            BucketName: "csv-tools-files"
 
 Outputs:
   CsvTransformToolFunctionUrl:

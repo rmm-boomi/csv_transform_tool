@@ -2,6 +2,8 @@ import re
 import json
 import csv_tools
 
+VALID_API_KEY="a-made-up-secret-value-123456"
+
 def post__run_opertions(params, body):
     operations = json.loads(body)
     filename = params[0]
@@ -22,8 +24,9 @@ def post__run_opertions(params, body):
 
 def lambda_handler(event, context):
     # Check headers for valid API key
-    authHeader = event['headers'].get('authorization', None)
-    if authHeader is None or authHeader != 'Bearer 84fha7vo83g92fhweio723fr6tf24kuewfo4f62r3gu23fhuwefi7d236g23d6d3':
+    normalized_headers = {key.lower(): value for key, value in event['headers'].items()}
+    authHeader = normalized_headers['authorization']
+    if authHeader is None or authHeader != f'Bearer {VALID_API_KEY}':
         return {
             'statusCode': 401,
             'body': 'Invalid API key'
@@ -40,12 +43,14 @@ def lambda_handler(event, context):
     path_params = list(path_match.groups())
     print(f"LOG: Request received: {req_path}")
 
-    # Get request body
+    # Get request body - convert to string if not already (local dev will be a dict)
     req_body = event.get('body', None)
+    if not isinstance(req_body, str):
+        req_body = json.dumps(req_body)
     
     # Run the handler
     response = post__run_opertions(path_params, req_body)
-
+    
     # Return the response
     return {
         'statusCode': response['status'],

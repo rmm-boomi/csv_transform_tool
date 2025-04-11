@@ -10,7 +10,7 @@ s3 = boto3.client('s3')
 def _write_file(filename, contents):
     s3.put_object(
         Bucket="csv-tools-files",
-        Key=filename,
+        Key=f"output/{filename}",
         Body=contents
     )
 
@@ -95,6 +95,7 @@ def operation_convert_to_json(running_value, args):
 
     column_order = df.columns.tolist()
     json_str = df[column_order].to_json(orient='records')
+    json_str = json.dumps(json.loads(json_str), indent=4) # For pretty printing
 
     print(f"LOG: CONVERT-TO-JSON successful")
     return {'type': 'json', 'data': json_str}

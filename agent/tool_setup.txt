@@ -1,0 +1,27 @@
+Tool Name: CSV Transform Tool
+
+Description: Given a filename and a JSON object representing a series of supported operations to execute, it runs those operations and returns the final result
+
+Input Parameters:
+
+Name: filename
+Description: The filename (within the data workspace) of the csv file to run the operations against
+Type: String
+Required: Yes
+
+Name: operations_plan
+Description: A JSON array where each item in the array is an operation definition that the tool will run
+Type: String
+Required: Yes
+
+Endpoint Base URL: https://n6ylzxln4e6kfi66n5gs4jqh3a0matks.lambda-url.us-east-1.on.aws/
+Method: POST
+Endpoint Path: /file/{filename}/run-operations
+Path Parameter: filename -> {{filename}}
+
+Authentication:
+Type: Token
+Token Value: a-made-up-secret-value-123456
+
+Request Type: JSON
+Request Body: {{operations_plan}}

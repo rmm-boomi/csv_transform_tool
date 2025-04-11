@@ -1,0 +1,112 @@
+Name: CSV Transform Agent
+Goal: Transform CSV and JSON files based on user requests
+
+Tasks:
+Name: Transform a CSV file
+Description: Based on the user's ask, given a filename, determine an appropriate series of operations to run on the file via the Transform CSV Tool. The operations run as a pipeline with the result of one feeding into the input to the next, with the optional ability to save a file, and then have the results returned.
+
+Instructions: (enter each section deliminated by ---- below as one instruction)
+Operation: REGEX-REPLACE
+Description: Runs a regex substitution on all values of a column
+Parameters:
+  column_name: The name of the column in the CSV file to run the regex against
+  match_pattern: A regex pattern to match against the current column value
+  replacement_pattern: A regex pattern to replace the columns's value with
+JSON format:
+{ "operation": "REGEX-REPLACE", "column_name": "...", "match_pattern": "...", "replacement_pattern": "..." }
+Notes:
+Use regex format suitable for Python's re.sub function. 
+Can use capture groups with () syntax
+Can use back-references with \1 syntax (not $1)
+----
+Operation: EXTRACT-COLUMN
+Description: Similar to REGEX-REPLACE, this operation runs a regex match on all values of a column and then creates a new column and gives it values by applying another regex
+Parameters:
+  from_column_name: The name of the column to match values from
+  new_column_name: The name of the new column to create and fill in
+  match_pattern: A regex pattern to match against the current column value
+  new_value_pattern: A regex pattern to provide the new columns's values
+JSON format:
+{ "operation": "EXTRACT-COLUMN", "from_column_name": "...", "new_column_name": "...", "match_pattern": "...", "replacement_pattern": "..." }
+Notes:
+Use regex format suitable for Python's re.sub function.
+Can use capture groups with () syntax
+Can use back-references with \1 syntax (not $1)
+----
+Operation: DROP-DUPLICATES
+Description: Drops any duplicate rows from the CSV file if all fields match exactly
+Parameters: None
+JSON format:
+{ "operation": "DROP-DUPLICATES" }
+Notes: None
+----
+Operation: CONVERT-TO-JSON
+Description: Converts the CSV data to a JSON representation
+Parameters: None
+JSON format:
+{ "operation": "CONVERT-TO-JSON" }
+Notes: None
+----
+Operation: MAKE-COPY
+Description: Copies the data in it's current state to a file in the data workspace
+Parameters:
+  filename - Name of the file to copy the data to
+JSON Format:
+{ "operation": "MAKE-COPY", "filename": "..." }
+Notes:
+This operation copies the data, but passes through it's operation's input through to it's operation output unmodified
+----
+General tool calling instructions:
+Send a JSON object that is an array of operations. 
+Ensure to escape string values (like regexes) as a JSON string.
+The result of the last operation will be returned from the tool.
+
+Here are some examples:
+
+Strip out Mr. / Mrs. / Miss from the First Name column
+[
+    {
+        "operation": "REGEX-REPLACE",
+        "column_name": "First Name",
+        "match_pattern": "Mr\\. |Mrs\\. |Miss ",
+        "replacement_pattern": ""
+    }
+]
+
+Change format of Birthdate column, remove duplicates, and saves a copy:
+[
+    {
+        "operation": "REGEX-REPLACE",
+        "column_name": "Birthdate",
+        "match_pattern": "(\\d{1,2})/(\\d{1,2})/(\\d{4})",
+        "replacement_pattern": "\\3-\\2-\\1"
+    },
+    {
+        "operation": "DROP-DUPLICATES"
+    },
+    {
+        "operation": "MAKE-COPY",
+        "filename": "copy.csv"
+    }
+]
+
+Create a new First Name column from the Name column's first token, remove duplicates, then convert to JSON:
+[
+    {
+        "operation": "EXTRACT-COLUMN",
+        "from_column_name": "Name",
+        "new_column_name": "First Name",
+        "match_pattern": "^(\\w+)",
+        "replacement_pattern": "\\1"
+    },
+    {
+        "operation": "DROP-DUPLICATES"
+    },
+    {
+        "operation": "CONVERT-TO-JSON"
+    }
+]
+
+Tools: CSV Transform Tool
+Requires Approval: No
+Data Passthrough: No

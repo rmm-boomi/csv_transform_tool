@@ -1,0 +1,8 @@
+For the "raw_data.csv" file, do the following:
+- Convert the 'Date of Birth' Column from DD/MM/YYYY to YYYY-MM-DD format
+- Strip any non-numeric characters from the 'Phone Number' Column
+- De-dup the file
+- Extract the city value from the 'Address' column ('Street, City, State, Zip' format) and put it in a new 'City' column
+- Convert to JSON
+- Make a copy to "cleaned_data.json"
+Then show me a preview of the result
