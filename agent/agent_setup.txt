@@ -109,8 +109,9 @@ Create a new First Name column from the Name column's first token, remove duplic
 ]
 ----
 
-Tool Setup:
-Tools: CSV Transform Tool
-  Requires Approval: No
-  Data Passthrough: No
+Tool:
+Name: CSV Transform Tool
+Type: API Tool
+Requires Approval: No
+Data Passthrough: No
 ----

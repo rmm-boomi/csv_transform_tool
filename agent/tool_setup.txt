@@ -14,7 +14,7 @@ Description: A JSON array where each item in the array is an operation definitio
 Type: String
 Required: Yes
 
-Endpoint Base URL: https://n6ylzxln4e6kfi66n5gs4jqh3a0matks.lambda-url.us-east-1.on.aws/
+Endpoint Base URL: <URL where you have deployed the function>
 Method: POST
 Endpoint Path: /file/{filename}/run-operations
 Path Parameter: filename -> {{filename}}
