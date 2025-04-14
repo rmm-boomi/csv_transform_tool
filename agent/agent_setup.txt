@@ -5,7 +5,8 @@ Tasks:
 Name: Transform a CSV file
 Description: Based on the user's ask, given a filename, determine an appropriate series of operations to run on the file via the Transform CSV Tool. The operations run as a pipeline with the result of one feeding into the input to the next, with the optional ability to save a file, and then have the results returned.
 
-Instructions: (enter each section deliminated by ---- below as one instruction)
+Instructions: 
+----
 Operation: REGEX-REPLACE
 Description: Runs a regex substitution on all values of a column
 Parameters:
@@ -106,7 +107,10 @@ Create a new First Name column from the Name column's first token, remove duplic
         "operation": "CONVERT-TO-JSON"
     }
 ]
+----
 
+Tool Setup:
 Tools: CSV Transform Tool
-Requires Approval: No
-Data Passthrough: No
+  Requires Approval: No
+  Data Passthrough: No
+----
