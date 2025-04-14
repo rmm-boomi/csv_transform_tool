@@ -7,16 +7,18 @@ from io import StringIO
 
 s3 = boto3.client('s3')
 
+BUCKET_NAME="boomi-ai-agent-tools-csv-tools-files"
+
 def _write_file(filename, contents):
     s3.put_object(
-        Bucket="csv-tools-files",
+        Bucket=BUCKET_NAME,
         Key=f"output/{filename}",
         Body=contents
     )
 
 def _read_file(filename):
     response = s3.get_object(
-        Bucket="csv-tools-files",
+        Bucket=BUCKET_NAME,
         Key=filename
     )
     return response['Body'].read().decode('utf-8')
